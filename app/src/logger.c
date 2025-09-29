@@ -69,8 +69,8 @@ int logger_msg_len;
 #if 1 == LOGGER_CONFIG_USE_SEMIHOSTING
 void logger_log_print_(char* const msg)
 {
-	printf(msg);
-	fflush(stdout);
+    printf(msg);
+    fflush(stdout);
 }
 #else
 void logger_log_print_(char* const msg)

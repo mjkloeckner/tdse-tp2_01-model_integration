@@ -56,9 +56,9 @@ extern "C" {
 static inline void cycle_counter_init(void) __attribute__((always_inline));
 static inline void cycle_counter_init(void)
 {
-	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; /* enable DWT hardware */
-	DWT->CYCCNT = 0;								/* reset cycle counter */
-	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;			/* start counting */
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; /* enable DWT hardware */
+    DWT->CYCCNT = 0;                                /* reset cycle counter */
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;            /* start counting */
 }
 
 /* reset cycle counter */
@@ -66,7 +66,7 @@ static inline void cycle_counter_init(void)
 static inline void cycle_counter_reset(void) __attribute__((always_inline));
 static inline void cycle_counter_reset(void)
 {
-	DWT->CYCCNT = 0;
+    DWT->CYCCNT = 0;
 }
 
 /* enable counting */
@@ -74,7 +74,7 @@ static inline void cycle_counter_reset(void)
 static inline void cycle_counter_enable(void) __attribute__((always_inline));
 static inline void cycle_counter_enable(void)
 {
-	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
 /* disable counting */
@@ -82,7 +82,7 @@ static inline void cycle_counter_enable(void)
 static inline void cycle_counter_disable(void) __attribute__((always_inline));
 static inline void cycle_counter_disable(void)
 {
-	DWT->CTRL &= ~DWT_CTRL_CYCCNTENA_Msk;
+    DWT->CTRL &= ~DWT_CTRL_CYCCNTENA_Msk;
 }
 
 /* read cycle counter */
@@ -90,36 +90,36 @@ static inline void cycle_counter_disable(void)
 static inline uint32_t cycle_counter_get(void) __attribute__((always_inline));
 static inline uint32_t cycle_counter_get(void)
 {
-	return (DWT->CYCCNT);
+    return (DWT->CYCCNT);
 }
 
 static inline uint32_t cycle_counter_get_time_us(void) __attribute__((always_inline));
 static inline uint32_t cycle_counter_get_time_us(void)
 {
-	return (DWT->CYCCNT / (SystemCoreClock / 1000000));
+    return (DWT->CYCCNT / (SystemCoreClock / 1000000));
 }
 
 /*  uint32_t cycle_counter = 0;
  *  uint32_t cycle_counter_time_us = 0;
- *															// PC8 (GPIO)
- *  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);	// => ______
+ *                                                        // PC8 (GPIO)
+ *  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET); // => ______
  *  cycle_counter_init();
  *
  *  ...
- *  ...														// => ______
- *															//		 ___
- *  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET); 	// => __/
+ *  ...                                                   // => ______
+ *                                                        //    ___
+ *  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);   // => __/
  *  // or => HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
  *  cycle_counter_reset();
- *															//	  ______
- *  ...														// =>
+ *                                                        //      ______
+ *  ...                                                   // =>
  *
  *  cycle_counter = cycle_counter_get();
- *  cycle_counter_time_us = cycle_counter_get_time_us();	//	  __
- *  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);	// =>   \___
+ *  cycle_counter_time_us = cycle_counter_get_time_us();  //      __
+ *  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET); // =>   \___
  *  // or => HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
  *
- *  														// => ______
+ *                                                        // => ______
  *
  *  LOGGER_LOG("Cycles: %lu - Time %lu uS\r\n", cycle_counter, cycle_counter_time_us);
  */

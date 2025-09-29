@@ -186,7 +186,6 @@ void task_sensor_statechart(void)
             case ST_BTN_XX_UP:
                 if (EV_BTN_XX_DOWN == p_task_sensor_dta->event)
                 {
-                    // put_event_task_system(p_task_sensor_cfg->signal_down);
                     p_task_sensor_dta->state = ST_BTN_XX_FALLING;
                     p_task_sensor_dta->tick  = DEL_BTN_XX_MAX;
                 }
