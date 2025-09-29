@@ -96,7 +96,7 @@ typedef enum
     ST_BTN_XX_UP,
     ST_BTN_XX_FALLING,
     ST_BTN_XX_DOWN,
-    ST_BTN_XX_RISINr
+    ST_BTN_XX_RISING
 } task_sensor_st_t;
 
 /* Identifier of Task Sensor */
