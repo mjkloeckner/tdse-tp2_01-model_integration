@@ -32,7 +32,7 @@
  * @file   : dwt.h
  * @date   : Set 26, 2023
  * @author : Juan Manuel Cruz <jcruz@fi.uba.ar> <jcruz@frba.utn.edu.ar>
- * @version	v1.0.0
+ * @version v1.0.0
  */
 
 #ifndef DWT_INC_DWT_H_
@@ -56,9 +56,9 @@ extern "C" {
 static inline void cycle_counter_init(void) __attribute__((always_inline));
 static inline void cycle_counter_init(void)
 {
-	 CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;/* enable DWT hardware */
-	 DWT->CYCCNT = 0;								/* reset cycle counter */
-	 DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;			/* start counting */
+	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; /* enable DWT hardware */
+	DWT->CYCCNT = 0;								/* reset cycle counter */
+	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;			/* start counting */
 }
 
 /* reset cycle counter */
