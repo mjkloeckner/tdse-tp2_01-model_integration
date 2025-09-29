@@ -4,8 +4,14 @@ Este proyecto ejecuta una aplicación no bloqueante la cual se actualiza en cada
 milisegundo. A su vez esta aplicación incluye 3 tareas `task_sensor`,
 `task_system` y `task_actuator` las cuales se modelan mediante maquinas de
 estado. De estas 3 tareas solo se ha implementado la maquina de estados de la
-primer primera `task_sensor`, de las restantes solo se ha implementado lo
-suficiente como para que la aplicación se ejecute, pero no son funcionales.
+primera `task_sensor`, de las restantes solo se ha implementado lo suficiente
+como para que la aplicación se ejecute.
+
+## Estructura del proyecto
+
+Para el proyecto se utiliza la IDE de STM:
+[STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html). Una
+vista de arbol de los archivos se muestra a continuación.
 
 ```console
 .
@@ -71,7 +77,7 @@ suficiente como para que la aplicación se ejecute, pero no son funcionales.
 15 directories, 44 files
 ```
 
-## Archivo `Core/Startup/startup_stm32f103rbtx.s`
+### Archivo `Core/Startup/startup_stm32f103rbtx.s`
 
 Esta escrito en arm assembly y se ejecuta al inicializar el microcontrolador, el
 propósito es inicializar los registros principales (como el stack pointer o el
@@ -82,7 +88,7 @@ control a la aplicación principal, la cual el punto de entrada es la función
 (branch with link) y luego el símbolo `main`. El único tipo de dato utilizado es
 `word` que representa una variable de 4 bytes (o 32 bits).
 
-## Archivo `Core/Src/main.c`
+### Archivo `Core/Src/main.c`
 
 El archivo `main.c` es un archivo escrito en C que contiene el punto de entrada
 del programa principal, este punto de entrada es invocado al momento de
@@ -120,7 +126,7 @@ funcionalidad definida. Por ultimo en la función `main` se inicializa la
 aplicación con `app_init` y en cada ciclo se actualiza el estado de la
 aplicación con `app_update`.
 
-## Archivo `Core/app/app.c`
+### Archivo `Core/app/app.c`
 
 En este archivo se definen las funciones `app_init` y `app_update` que se
 invocan en la función `main`, y se define el callback `HAL_SYSTICK_Callback`,
@@ -138,3 +144,14 @@ ejecución se guarda en el dato `WCET` de cada tarea. La aplicación también ll
 un registro del tiempo de ejecución en microsegundos que se tarda en ejecutar
 todas las tareas, y resulta de la suma del tiempo de ejecución cada tarea, el
 resultado se guarda en la variable global `g_app_runtime_us`.
+
+## Diagrama de estados de tareas
+
+Como se mencionó previamente, las tareas se modelan mediante maquinas de
+estados, a continuacion se muestras los diagramas respectivos.
+
+![](app/task_actuator.png)
+
+![](app/task_sensor.png)
+
+![](app/task_system.png)
