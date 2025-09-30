@@ -57,6 +57,7 @@ extern "C" {
 /********************** external data declaration ****************************/
 extern uint32_t g_app_cnt;
 extern uint32_t g_app_runtime_us;
+extern uint32_t g_app_WCET_us;
 
 extern volatile uint32_t g_app_tick_cnt;
 

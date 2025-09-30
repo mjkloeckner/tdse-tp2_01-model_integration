@@ -50,20 +50,21 @@
 #include "task_sensor.h"
 
 /********************** macros and definitions *******************************/
-#define G_APP_CNT_INI		0ul
-#define G_APP_TICK_CNT_INI	0ul
+#define G_APP_CNT_INI       0ul
+#define G_APP_TICK_CNT_INI  0ul
+#define G_APP_WCET_INI      0ul
 
-#define TASK_X_WCET_INI		0ul
-#define TASK_X_DELAY_MIN	0ul
+#define TASK_X_WCET_INI     0ul
+#define TASK_X_DELAY_MIN    0ul
 
 typedef struct {
-    void (*task_init)(void *);   // Pointer to task (must be a
-    void (*task_update)(void *); // Pointer to task (must be a
-    void *parameters;            // Pointer to parameters
+    void (*task_init)(void *);
+    void (*task_update)(void *);
+    void *parameters;
 } task_cfg_t;
 
 typedef struct {
-    uint32_t WCET; // Worst-case execution time (microseconds)
+    uint32_t WCET; // Task worst-case execution time (microseconds)
 } task_dta_t;
 
 /********************** internal data declaration ****************************/
@@ -84,6 +85,7 @@ const char *p_app = " App - Model Integration - C codig";
 /********************** external data declaration ****************************/
 uint32_t g_app_cnt;
 uint32_t g_app_runtime_us;
+uint32_t g_app_WCET_us; // Worst case execution time historically
 
 volatile uint32_t g_app_tick_cnt;
 
@@ -104,6 +106,9 @@ void app_init(void)
     /* Init & Print out: Application execution counter */
     g_app_cnt = G_APP_CNT_INI;
     LOGGER_INFO(" %s = %lu", GET_NAME(g_app_cnt), g_app_cnt);
+
+    /* Init application worst case execution time */
+    g_app_WCET_us = G_APP_WCET_INI;
 
     /* Init Cycle Counter */
     cycle_counter_init();
@@ -164,6 +169,11 @@ void app_update(void)
 
             /* Update variables */
             g_app_runtime_us += cycle_counter_time_us;
+
+            if (g_app_WCET_us < g_app_runtime_us) {
+                g_app_WCET_us = g_app_runtime_us;
+                LOGGER_INFO("  App WCET: %lu", g_app_WCET_us);
+            }
 
             if (task_dta_list[index].WCET < cycle_counter_time_us)
             {
