@@ -2,8 +2,8 @@
 
 En este proyecto se implementa una aplicación para la placa STM32
 [Nucleo-F103RB](https://www.st.com/en/evaluation-tools/nucleo-f103rb.html). Esta
-aplicacion es de tipo no bloqueante y [dirigida por
-eventos](https://es.wikipedia.org/wiki/Programaci%C3%B3n_dirigida_por_eventos).
+aplicación es de tipo no bloqueante y [dirigida por
+eventos](https://es.wikipedia.org/wiki/Programaci%C3%B3n_dirigida_por_eventos),
 ademas se actualiza en cada milisegundo. A su vez esta aplicación incluye 3
 tareas `task_sensor`, `task_system` y `task_actuator` las cuales se modelan
 mediante maquinas de estado. De estas 3 tareas en esta instancia solo se ha
@@ -15,7 +15,7 @@ errores.
 
 Para el proyecto se utiliza la IDE de STM:
 [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html). Una
-vista de arbol nivel 3 (desde la raiz del directorio) se muestra a continuación.
+vista de árbol nivel 3 (desde la raíz del directorio) se muestra a continuación.
 
 ```console
 .
@@ -130,7 +130,7 @@ funcionalidad definida. Por ultimo en la función `main` se inicializa la
 aplicación con `app_init` y en cada ciclo se actualiza el estado de la
 aplicación con `app_update`.
 
-### Archivo `Core/app/app.c`
+### Archivo `app/src/app.c`
 
 En este archivo se definen las funciones `app_init` y `app_update` que se
 invocan en la función `main`, y se define el callback `HAL_SYSTICK_Callback`,
@@ -160,6 +160,15 @@ Sin impresión el tiempo aproximado de ejecución de una tarea es menor a 10 us,
 mientras que utilizando `LOGGER_INFO` el tiempo se incrementa 95 ms
 aproximadamente, esto hace que el peor tiempo de ejecución de la aplicación se
 incremente de 13 us a 106 us.
+
+### Archivo `app/src/task_sensor.c`
+
+En este archivo se implementa las funciones del modelo sensor, el cual se
+modela, en esta instancia como un botón, utilizando una maquina de estados.
+
+### Archivo `app/src/task_sensor_attribute.h`
+
+### Archivo `app/task_sensor.png`
 
 ## Diagrama de estados de tareas
 
