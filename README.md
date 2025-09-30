@@ -1,17 +1,21 @@
 # Taller de Sistemas Embebidos
 
-Este proyecto ejecuta una aplicación no bloqueante la cual se actualiza en cada
-milisegundo. A su vez esta aplicación incluye 3 tareas `task_sensor`,
-`task_system` y `task_actuator` las cuales se modelan mediante maquinas de
-estado. De estas 3 tareas en esta instancia solo se ha implementado la maquina
-de estados de la primera `task_sensor`, de las restantes solo se ha implementado
-lo suficiente como para que la aplicación se ejecute.
+En este proyecto se implementa una aplicación para la placa STM32
+[Nucleo-F103RB](https://www.st.com/en/evaluation-tools/nucleo-f103rb.html). Esta
+aplicacion es de tipo no bloqueante y [dirigida por
+eventos](https://es.wikipedia.org/wiki/Programaci%C3%B3n_dirigida_por_eventos).
+ademas se actualiza en cada milisegundo. A su vez esta aplicación incluye 3
+tareas `task_sensor`, `task_system` y `task_actuator` las cuales se modelan
+mediante maquinas de estado. De estas 3 tareas en esta instancia solo se ha
+implementado la maquina de estados de la primera `task_sensor`, de las restantes
+solo se ha implementado lo suficiente como para que la aplicación se ejecute sin
+errores.
 
 ## Estructura del proyecto
 
 Para el proyecto se utiliza la IDE de STM:
 [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html). Una
-vista de arbol de los archivos se muestra a continuación.
+vista de arbol nivel 3 (desde la raiz del directorio) se muestra a continuación.
 
 ```console
 .
@@ -79,14 +83,14 @@ vista de arbol de los archivos se muestra a continuación.
 
 ### Archivo `Core/Startup/startup_stm32f103rbtx.s`
 
-Esta escrito en arm assembly y se ejecuta al inicializar el microcontrolador, el
-propósito es inicializar los registros principales (como el stack pointer o el
-program counter) la memoria y periféricos, para finalmente transferir el
-control a la aplicación principal, la cual el punto de entrada es la función
-`main` (definida en el archivo `Core/Src/main.c`) esto se puede ver en la linea
-100 del archivo de inicialización, en la cual se ejecuta una instrucción `bl`
-(branch with link) y luego el símbolo `main`. El único tipo de dato utilizado es
-`word` que representa una variable de 4 bytes (o 32 bits).
+Este archivo está escrito en arm assembly y se ejecuta al inicializar el
+microcontrolador, el propósito es inicializar los registros principales (como el
+stack pointer o el program counter) la memoria y periféricos, para finalmente
+transferir el control a la aplicación principal, cuyo punto de entrada es la
+función `main` (definida en el archivo `Core/Src/main.c`) esto se puede ver en
+la linea 100 del archivo de inicialización, en la cual se ejecuta una
+instrucción `bl` (branch with link) y luego el símbolo `main`. El único tipo de
+dato utilizado es `word` que representa una variable de 4 bytes (o 32 bits).
 
 ### Archivo `Core/Src/main.c`
 
@@ -134,21 +138,33 @@ este ultimo es una función que previamente ya estaba definida pero de manera
 débil en la librería HAL, y se inicializa al momento de invocar `HAL_Init`, esta
 función se ejecuta cada 1 milisegundo debido a una interrupción generada por un
 timer. El callback se define de manera tal de incrementar el contador global de
-ticks de la aplicación y el interno de cada tarea, de esta manera, cada vez que
-el contador de cada tarea y de la aplicación dejan de ser nulos (en cada
-milisegundo) la aplicación y las tareas se deben actualizar.
+ticks de la aplicación `g_app_tick_cnt` y el interno de cada tarea
+`g_task_*_tick_cnt`, de esta manera, cada vez que el contador de cada tarea y de
+la aplicación dejan de ser nulos (en cada milisegundo) la aplicación y las
+tareas se deben actualizar.
 
 Cada vez que se ejecutan las tareas se mide el tiempo de ejecución contando los
-microsegundos que se tarde en ejecutar esa tarea, el pero de los tiempos de
+microsegundos que se tarde en ejecutar esa tarea, el peor de los tiempos de
 ejecución se guarda en el dato `WCET` de cada tarea. La aplicación también lleva
 un registro del tiempo de ejecución en microsegundos que se tarda en ejecutar
 todas las tareas, y resulta de la suma del tiempo de ejecución cada tarea, el
-resultado se guarda en la variable global `g_app_runtime_us`.
+resultado se guarda en la variable global `g_app_runtime_us`, esta variable se
+actualiza en cada ejecución de las tareas, ademas se ha agregado la variable
+`g_app_WCET_us` en la cual se guarda el peor tiempo de ejecución de todas las
+tareas desde que se inicio el microcontrolador.
+
+Analizando la evolución de la variable `g_app_WCET_us` se ha detectado el
+impacto de imprimir texto en la consola con `LOGGER_INFO` en el tiempo de
+ejecución de la aplicación, así como analizando el dato `WCET` de cada tarea.
+Sin impresión el tiempo aproximado de ejecución de una tarea es menor a 10 us,
+mientras que utilizando `LOGGER_INFO` el tiempo se incrementa 95 ms
+aproximadamente, esto hace que el peor tiempo de ejecución de la aplicación se
+incremente de 13 us a 106 us.
 
 ## Diagrama de estados de tareas
 
 Como se mencionó previamente, las tareas se modelan mediante maquinas de
-estados, a continuacion se muestras los diagramas respectivos.
+estados, a continuación se muestras los diagramas respectivos.
 
 ![](app/task_actuator.png)
 
