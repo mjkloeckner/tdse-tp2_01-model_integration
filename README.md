@@ -167,20 +167,20 @@ En este archivo se implementa las funciones del modelo sensor, el cual se
 modela, en esta instancia como un único botón, utilizando una maquina de estados.
 
 Las subrutinas que se presentan son `task_sensor_init`, `task_sensor_update` y
-`task_sensor_statechart`. La primera `task_sensor_init` se invoca por unica vez
+`task_sensor_statechart`. La primera `task_sensor_init` se invoca por única vez
 al iniciar la tarea (cuando se invoca `app_init`) e inicializa las variables de
 todas las maquinas de estados de modelo sensor disponibles (ya que pueden haber
 multiples, definidas en `task_sensor_cfg_list` y `task_sensor_dta_list`). Las
 ultimas dos subrutinas `task_sensor_update` y `task_sensor_statechart` se
 invocan continuamente en el superloop, al invocar `app_update`, en particular en
 `app_update` se llama a `task_sensor_update` y esta internamente invoca la
-funcion `task_sensor_statechart`, la cual actualiza el estado de cada una de la
+función `task_sensor_statechart`, la cual actualiza el estado de cada una de la
 maquina de estados disponibles del modelo `task_sensor`.
 
 ### Archivo `app/src/task_sensor_attribute.h`
 
 En este archivo se describen los atributos de la maquina de estados del modelo
-sensor, como son los eventos que recibe y los estados posibles, tambien se
+sensor, como son los eventos que recibe y los estados posibles, también se
 definen las estructuras que representan esta maquina de estados, de manera tal
 de poder representar multiples sensores.
 
@@ -188,7 +188,7 @@ de poder representar multiples sensores.
 
 En este archivo se presenta el diagrama de estados completo de la maquina de
 estados que representa al sensor. Por ser un diagrama de estados se muestran
-todos los posibles estados, como tambien el inicial, y como cambian estos al
+todos los posibles estados, como también el inicial, y como cambian estos al
 recibir eventos.
 
 ![](app/task_sensor.png)
