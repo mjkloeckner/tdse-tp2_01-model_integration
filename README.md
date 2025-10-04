@@ -100,15 +100,15 @@ inicializar el microcontrolador, como se mencionó previamente. El patrón de
 diseño de este archivo es procedural, ya que la ejecución del programa se lleva
 a cabo mediante la invocación de diferentes funciones o subrutinas.
 
-Los métodos que se encuentran en este archivo además de la (función principal
-`main`) son: `initialise_monitor_handles`, `HAL_Init`, `SystemClock_Config`,
-`MX_GPIO_Init`, `MX_USART2_UART_Init`, `app_init`, `app_update` y
-`Error_Handler`.
+Las funciones o subrutinas que se encuentran en este archivo además de la
+(función principal `main`) son: `initialise_monitor_handles`, `HAL_Init`,
+`SystemClock_Config`, `MX_GPIO_Init`, `MX_USART2_UART_Init`, `app_init`,
+`app_update` y `Error_Handler`.
 
-La función o método `initialise_monitor_handles` se encarga de inicializar o
-configurar como se manipula la entrada y salida, por ejemplo con `printf` al
-momento de depurar el código, en particular se utiliza el protocolo UART para
-comunicarse con la computadora, es por esto que se inicializa con la función
+La función  `initialise_monitor_handles` se encarga de inicializar o configurar
+como se manipula la entrada y salida, por ejemplo con `printf` al momento de
+depurar el código, en particular se utiliza el protocolo UART para comunicarse
+con la computadora, es por esto que se inicializa con la función
 `MX_USART2_UART_Init`.
 
 La función `SystemClock_Config` como se indica en el nombre configura los
@@ -164,19 +164,31 @@ incremente de 13 us a 106 us.
 ### Archivo `app/src/task_sensor.c`
 
 En este archivo se implementa las funciones del modelo sensor, el cual se
-modela, en esta instancia como un botón, utilizando una maquina de estados.
+modela, en esta instancia como un único botón, utilizando una maquina de estados.
+
+Las subrutinas que se presentan son `task_sensor_init`, `task_sensor_update` y
+`task_sensor_statechart`. La primera `task_sensor_init` se invoca por unica vez
+al iniciar la tarea (cuando se invoca `app_init`) e inicializa las variables de
+todas las maquinas de estados de modelo sensor disponibles (ya que pueden haber
+multiples, definidas en `task_sensor_cfg_list` y `task_sensor_dta_list`). Las
+ultimas dos subrutinas `task_sensor_update` y `task_sensor_statechart` se
+invocan continuamente en el superloop, al invocar `app_update`, en particular en
+`app_update` se llama a `task_sensor_update` y esta internamente invoca la
+funcion `task_sensor_statechart`, la cual actualiza el estado de cada una de la
+maquina de estados disponibles del modelo `task_sensor`.
 
 ### Archivo `app/src/task_sensor_attribute.h`
 
+En este archivo se describen los atributos de la maquina de estados del modelo
+sensor, como son los eventos que recibe y los estados posibles, tambien se
+definen las estructuras que representan esta maquina de estados, de manera tal
+de poder representar multiples sensores.
+
 ### Archivo `app/task_sensor.png`
 
-## Diagrama de estados de tareas
-
-Como se mencionó previamente, las tareas se modelan mediante maquinas de
-estados, a continuación se muestras los diagramas respectivos.
-
-![](app/task_actuator.png)
+En este archivo se presenta el diagrama de estados completo de la maquina de
+estados que representa al sensor. Por ser un diagrama de estados se muestran
+todos los posibles estados, como tambien el inicial, y como cambian estos al
+recibir eventos.
 
 ![](app/task_sensor.png)
-
-![](app/task_system.png)
